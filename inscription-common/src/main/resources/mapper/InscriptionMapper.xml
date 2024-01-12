@@ -1,0 +1,473 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.turn.inscription.dao.mapper.InscriptionMapper">
+  <resultMap id="BaseResultMap" type="com.turn.inscription.dao.entity.Inscription">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="contract_address" jdbcType="VARCHAR" property="contractAddress" />
+    <result column="inscription_id" jdbcType="VARCHAR" property="inscriptionId" />
+    <result column="tick" jdbcType="VARCHAR" property="tick" />
+    <result column="total_supply" jdbcType="BIGINT" property="totalSupply" />
+    <result column="limit_per_mint" jdbcType="BIGINT" property="limitPerMint" />
+    <result column="max_per_wallet" jdbcType="BIGINT" property="maxPerWallet" />
+    <result column="need_extend_value" jdbcType="INTEGER" property="needExtendValue" />
+    <result column="deploy_by" jdbcType="VARCHAR" property="deployBy" />
+    <result column="deploy_time" jdbcType="TIMESTAMP" property="deployTime" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="minted" jdbcType="BIGINT" property="minted" />
+    <result column="holders" jdbcType="INTEGER" property="holders" />
+    <result column="total_tx" jdbcType="BIGINT" property="totalTx" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, contract_address, inscription_id, tick, total_supply, limit_per_mint, max_per_wallet, 
+    need_extend_value, deploy_by, deploy_time, `status`, minted, holders, total_tx, create_time, 
+    update_time
+  </sql>
+  <select id="selectByExample" parameterType="com.turn.inscription.dao.entity.InscriptionExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from inscription
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from inscription
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from inscription
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.turn.inscription.dao.entity.InscriptionExample">
+    delete from inscription
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.turn.inscription.dao.entity.Inscription">
+    insert into inscription (id, contract_address, inscription_id, 
+      tick, total_supply, limit_per_mint, 
+      max_per_wallet, need_extend_value, deploy_by, 
+      deploy_time, `status`, minted, 
+      holders, total_tx, create_time, 
+      update_time)
+    values (#{id,jdbcType=INTEGER}, #{contractAddress,jdbcType=VARCHAR}, #{inscriptionId,jdbcType=VARCHAR}, 
+      #{tick,jdbcType=VARCHAR}, #{totalSupply,jdbcType=BIGINT}, #{limitPerMint,jdbcType=BIGINT}, 
+      #{maxPerWallet,jdbcType=BIGINT}, #{needExtendValue,jdbcType=INTEGER}, #{deployBy,jdbcType=VARCHAR}, 
+      #{deployTime,jdbcType=TIMESTAMP}, #{status,jdbcType=INTEGER}, #{minted,jdbcType=BIGINT}, 
+      #{holders,jdbcType=INTEGER}, #{totalTx,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.turn.inscription.dao.entity.Inscription">
+    insert into inscription
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="contractAddress != null">
+        contract_address,
+      </if>
+      <if test="inscriptionId != null">
+        inscription_id,
+      </if>
+      <if test="tick != null">
+        tick,
+      </if>
+      <if test="totalSupply != null">
+        total_supply,
+      </if>
+      <if test="limitPerMint != null">
+        limit_per_mint,
+      </if>
+      <if test="maxPerWallet != null">
+        max_per_wallet,
+      </if>
+      <if test="needExtendValue != null">
+        need_extend_value,
+      </if>
+      <if test="deployBy != null">
+        deploy_by,
+      </if>
+      <if test="deployTime != null">
+        deploy_time,
+      </if>
+      <if test="status != null">
+        `status`,
+      </if>
+      <if test="minted != null">
+        minted,
+      </if>
+      <if test="holders != null">
+        holders,
+      </if>
+      <if test="totalTx != null">
+        total_tx,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="contractAddress != null">
+        #{contractAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="inscriptionId != null">
+        #{inscriptionId,jdbcType=VARCHAR},
+      </if>
+      <if test="tick != null">
+        #{tick,jdbcType=VARCHAR},
+      </if>
+      <if test="totalSupply != null">
+        #{totalSupply,jdbcType=BIGINT},
+      </if>
+      <if test="limitPerMint != null">
+        #{limitPerMint,jdbcType=BIGINT},
+      </if>
+      <if test="maxPerWallet != null">
+        #{maxPerWallet,jdbcType=BIGINT},
+      </if>
+      <if test="needExtendValue != null">
+        #{needExtendValue,jdbcType=INTEGER},
+      </if>
+      <if test="deployBy != null">
+        #{deployBy,jdbcType=VARCHAR},
+      </if>
+      <if test="deployTime != null">
+        #{deployTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="minted != null">
+        #{minted,jdbcType=BIGINT},
+      </if>
+      <if test="holders != null">
+        #{holders,jdbcType=INTEGER},
+      </if>
+      <if test="totalTx != null">
+        #{totalTx,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.turn.inscription.dao.entity.InscriptionExample" resultType="java.lang.Long">
+    select count(*) from inscription
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update inscription
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.contractAddress != null">
+        contract_address = #{record.contractAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="record.inscriptionId != null">
+        inscription_id = #{record.inscriptionId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.tick != null">
+        tick = #{record.tick,jdbcType=VARCHAR},
+      </if>
+      <if test="record.totalSupply != null">
+        total_supply = #{record.totalSupply,jdbcType=BIGINT},
+      </if>
+      <if test="record.limitPerMint != null">
+        limit_per_mint = #{record.limitPerMint,jdbcType=BIGINT},
+      </if>
+      <if test="record.maxPerWallet != null">
+        max_per_wallet = #{record.maxPerWallet,jdbcType=BIGINT},
+      </if>
+      <if test="record.needExtendValue != null">
+        need_extend_value = #{record.needExtendValue,jdbcType=INTEGER},
+      </if>
+      <if test="record.deployBy != null">
+        deploy_by = #{record.deployBy,jdbcType=VARCHAR},
+      </if>
+      <if test="record.deployTime != null">
+        deploy_time = #{record.deployTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.status != null">
+        `status` = #{record.status,jdbcType=INTEGER},
+      </if>
+      <if test="record.minted != null">
+        minted = #{record.minted,jdbcType=BIGINT},
+      </if>
+      <if test="record.holders != null">
+        holders = #{record.holders,jdbcType=INTEGER},
+      </if>
+      <if test="record.totalTx != null">
+        total_tx = #{record.totalTx,jdbcType=BIGINT},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateTime != null">
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update inscription
+    set id = #{record.id,jdbcType=INTEGER},
+      contract_address = #{record.contractAddress,jdbcType=VARCHAR},
+      inscription_id = #{record.inscriptionId,jdbcType=VARCHAR},
+      tick = #{record.tick,jdbcType=VARCHAR},
+      total_supply = #{record.totalSupply,jdbcType=BIGINT},
+      limit_per_mint = #{record.limitPerMint,jdbcType=BIGINT},
+      max_per_wallet = #{record.maxPerWallet,jdbcType=BIGINT},
+      need_extend_value = #{record.needExtendValue,jdbcType=INTEGER},
+      deploy_by = #{record.deployBy,jdbcType=VARCHAR},
+      deploy_time = #{record.deployTime,jdbcType=TIMESTAMP},
+      `status` = #{record.status,jdbcType=INTEGER},
+      minted = #{record.minted,jdbcType=BIGINT},
+      holders = #{record.holders,jdbcType=INTEGER},
+      total_tx = #{record.totalTx,jdbcType=BIGINT},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.turn.inscription.dao.entity.Inscription">
+    update inscription
+    <set>
+      <if test="contractAddress != null">
+        contract_address = #{contractAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="inscriptionId != null">
+        inscription_id = #{inscriptionId,jdbcType=VARCHAR},
+      </if>
+      <if test="tick != null">
+        tick = #{tick,jdbcType=VARCHAR},
+      </if>
+      <if test="totalSupply != null">
+        total_supply = #{totalSupply,jdbcType=BIGINT},
+      </if>
+      <if test="limitPerMint != null">
+        limit_per_mint = #{limitPerMint,jdbcType=BIGINT},
+      </if>
+      <if test="maxPerWallet != null">
+        max_per_wallet = #{maxPerWallet,jdbcType=BIGINT},
+      </if>
+      <if test="needExtendValue != null">
+        need_extend_value = #{needExtendValue,jdbcType=INTEGER},
+      </if>
+      <if test="deployBy != null">
+        deploy_by = #{deployBy,jdbcType=VARCHAR},
+      </if>
+      <if test="deployTime != null">
+        deploy_time = #{deployTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null">
+        `status` = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="minted != null">
+        minted = #{minted,jdbcType=BIGINT},
+      </if>
+      <if test="holders != null">
+        holders = #{holders,jdbcType=INTEGER},
+      </if>
+      <if test="totalTx != null">
+        total_tx = #{totalTx,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.turn.inscription.dao.entity.Inscription">
+    update inscription
+    set contract_address = #{contractAddress,jdbcType=VARCHAR},
+      inscription_id = #{inscriptionId,jdbcType=VARCHAR},
+      tick = #{tick,jdbcType=VARCHAR},
+      total_supply = #{totalSupply,jdbcType=BIGINT},
+      limit_per_mint = #{limitPerMint,jdbcType=BIGINT},
+      max_per_wallet = #{maxPerWallet,jdbcType=BIGINT},
+      need_extend_value = #{needExtendValue,jdbcType=INTEGER},
+      deploy_by = #{deployBy,jdbcType=VARCHAR},
+      deploy_time = #{deployTime,jdbcType=TIMESTAMP},
+      `status` = #{status,jdbcType=INTEGER},
+      minted = #{minted,jdbcType=BIGINT},
+      holders = #{holders,jdbcType=INTEGER},
+      total_tx = #{totalTx,jdbcType=BIGINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <insert id="batchInsert" parameterType="map">
+    <!--
+      WARNING - @mbg.generated
+      This element is automatically generated by MyBatis Generator, do not modify.
+      @project https://github.com/itfsw/mybatis-generator-plugin
+    -->
+    insert into inscription
+    (id, contract_address, inscription_id, tick, total_supply, limit_per_mint, max_per_wallet, 
+      need_extend_value, deploy_by, deploy_time, `status`, minted, holders, total_tx, 
+      create_time, update_time)
+    values
+    <foreach collection="list" item="item" separator=",">
+      (#{item.id,jdbcType=INTEGER}, #{item.contractAddress,jdbcType=VARCHAR}, #{item.inscriptionId,jdbcType=VARCHAR}, 
+        #{item.tick,jdbcType=VARCHAR}, #{item.totalSupply,jdbcType=BIGINT}, #{item.limitPerMint,jdbcType=BIGINT}, 
+        #{item.maxPerWallet,jdbcType=BIGINT}, #{item.needExtendValue,jdbcType=INTEGER}, 
+        #{item.deployBy,jdbcType=VARCHAR}, #{item.deployTime,jdbcType=TIMESTAMP}, #{item.status,jdbcType=INTEGER}, 
+        #{item.minted,jdbcType=BIGINT}, #{item.holders,jdbcType=INTEGER}, #{item.totalTx,jdbcType=BIGINT}, 
+        #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateTime,jdbcType=TIMESTAMP})
+    </foreach>
+  </insert>
+  <insert id="batchInsertSelective" parameterType="map">
+    <!--
+      WARNING - @mbg.generated
+      This element is automatically generated by MyBatis Generator, do not modify.
+      @project https://github.com/itfsw/mybatis-generator-plugin
+    -->
+    insert into inscription (
+    <foreach collection="selective" item="column" separator=",">
+      ${column.escapedColumnName}
+    </foreach>
+    )
+    values
+    <foreach collection="list" item="item" separator=",">
+      (
+      <foreach collection="selective" item="column" separator=",">
+        <if test="'id'.toString() == column.value">
+          #{item.id,jdbcType=INTEGER}
+        </if>
+        <if test="'contract_address'.toString() == column.value">
+          #{item.contractAddress,jdbcType=VARCHAR}
+        </if>
+        <if test="'inscription_id'.toString() == column.value">
+          #{item.inscriptionId,jdbcType=VARCHAR}
+        </if>
+        <if test="'tick'.toString() == column.value">
+          #{item.tick,jdbcType=VARCHAR}
+        </if>
+        <if test="'total_supply'.toString() == column.value">
+          #{item.totalSupply,jdbcType=BIGINT}
+        </if>
+        <if test="'limit_per_mint'.toString() == column.value">
+          #{item.limitPerMint,jdbcType=BIGINT}
+        </if>
+        <if test="'max_per_wallet'.toString() == column.value">
+          #{item.maxPerWallet,jdbcType=BIGINT}
+        </if>
+        <if test="'need_extend_value'.toString() == column.value">
+          #{item.needExtendValue,jdbcType=INTEGER}
+        </if>
+        <if test="'deploy_by'.toString() == column.value">
+          #{item.deployBy,jdbcType=VARCHAR}
+        </if>
+        <if test="'deploy_time'.toString() == column.value">
+          #{item.deployTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="'status'.toString() == column.value">
+          #{item.status,jdbcType=INTEGER}
+        </if>
+        <if test="'minted'.toString() == column.value">
+          #{item.minted,jdbcType=BIGINT}
+        </if>
+        <if test="'holders'.toString() == column.value">
+          #{item.holders,jdbcType=INTEGER}
+        </if>
+        <if test="'total_tx'.toString() == column.value">
+          #{item.totalTx,jdbcType=BIGINT}
+        </if>
+        <if test="'create_time'.toString() == column.value">
+          #{item.createTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="'update_time'.toString() == column.value">
+          #{item.updateTime,jdbcType=TIMESTAMP}
+        </if>
+      </foreach>
+      )
+    </foreach>
+  </insert>
+</mapper>

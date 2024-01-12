@@ -1,0 +1,13 @@
+pluginManagement {
+	repositories {
+		gradlePluginPortal()
+	}
+}
+rootProject.name = 'turn-inscription'
+include 'inscription-agent'
+include 'inscription-api'
+include 'inscription-common'
+include 'inscription-generator'
+include 'inscription-service'
+include 'inscription-job'
+

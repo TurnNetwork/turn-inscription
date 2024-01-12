@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.turn.inscription.dao.custommapper.CustomInscriptionMapper">
+  <resultMap id="BaseResultMap" type="com.turn.inscription.dao.entity.Inscription">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="contract_address" jdbcType="VARCHAR" property="contractAddress" />
+    <result column="inscription_id" jdbcType="VARCHAR" property="inscriptionId" />
+    <result column="tick" jdbcType="VARCHAR" property="tick" />
+    <result column="total_supply" jdbcType="BIGINT" property="totalSupply" />
+    <result column="limit_per_mint" jdbcType="BIGINT" property="limitPerMint" />
+    <result column="max_per_wallet" jdbcType="BIGINT" property="maxPerWallet" />
+    <result column="need_extend_value" jdbcType="INTEGER" property="needExtendValue" />
+    <result column="deploy_by" jdbcType="VARCHAR" property="deployBy" />
+    <result column="deploy_time" jdbcType="TIMESTAMP" property="deployTime" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="minted" jdbcType="BIGINT" property="minted" />
+    <result column="holders" jdbcType="INTEGER" property="holders" />
+    <result column="total_tx" jdbcType="BIGINT" property="totalTx" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, contract_address, inscription_id, tick, total_supply, limit_per_mint, max_per_wallet,
+    need_extend_value, deploy_by, deploy_time, `status`, minted, holders, total_tx, create_time,
+    update_time
+  </sql>
+  <update id="updateMinted">
+    update inscription set minted = minted + #{limitPerMint} where contract_address = #{contractAddress}
+  </update>
+  <select id="selectListByExample" parameterType="com.turn.inscription.dao.entity.InscriptionExample" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from inscription
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByInscriptionId" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from inscription
+    where inscription_id = #{inscriptionId}
+  </select>
+</mapper>

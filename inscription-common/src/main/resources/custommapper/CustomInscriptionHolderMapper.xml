@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.turn.inscription.dao.custommapper.CustomInscriptionHolderMapper">
+    <resultMap id="BaseResultMap" type="com.turn.inscription.dao.entity.InscriptionHolder">
+        <id column="inscription_id" jdbcType="VARCHAR" property="inscriptionId" />
+        <result column="address" jdbcType="VARCHAR" property="address" />
+        <result column="balance" jdbcType="VARCHAR" property="balance" />
+        <result column="mint_times" jdbcType="INTEGER" property="mintTimes" />
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    </resultMap>
+    <sql id="Example_Where_Clause">
+        <where>
+            <foreach collection="oredCriteria" item="criteria" separator="or">
+                <if test="criteria.valid">
+                    <trim prefix="(" prefixOverrides="and" suffix=")">
+                        <foreach collection="criteria.criteria" item="criterion">
+                            <choose>
+                                <when test="criterion.noValue">
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue">
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue">
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue">
+                                    and ${criterion.condition}
+                                    <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+    <sql id="Update_By_Example_Where_Clause">
+        <where>
+            <foreach collection="example.oredCriteria" item="criteria" separator="or">
+                <if test="criteria.valid">
+                    <trim prefix="(" prefixOverrides="and" suffix=")">
+                        <foreach collection="criteria.criteria" item="criterion">
+                            <choose>
+                                <when test="criterion.noValue">
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue">
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue">
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue">
+                                    and ${criterion.condition}
+                                    <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+    <sql id="Base_Column_List">
+        inscription_id, address, balance, mint_times, create_time, update_time
+    </sql>
+    <insert id="batchInsertOrUpdateSelective" parameterType="map">
+        replace into inscription_holder (
+        <foreach collection="selective" item="column" separator=",">
+            ${column.escapedColumnName}
+        </foreach>
+        )
+        values
+        <foreach collection="list" item="item" separator=",">
+            (
+            <foreach collection="selective" item="column" separator=",">
+                <if test="'inscription_id'.toString() == column.value">
+                    #{item.inscriptionId,jdbcType=VARCHAR}
+                </if>
+                <if test="'address'.toString() == column.value">
+                    #{item.address,jdbcType=VARCHAR}
+                </if>
+                <if test="'balance'.toString() == column.value">
+                    #{item.balance,jdbcType=DECIMAL}
+                </if>
+                <if test="'mint_times'.toString() == column.value">
+                    #{item.mintTimes,jdbcType=INTEGER}
+                </if>
+            </foreach>
+            )
+        </foreach>
+    </insert>
+    <select id="selectByKey" resultType="com.turn.inscription.dao.entity.InscriptionHolder">
+        select
+        <include refid="Base_Column_List" />
+        from inscription_holder
+        where inscription_id = #{inscriptionId,jdbcType=VARCHAR}
+          and address = #{address,jdbcType=VARCHAR}
+    </select>
+    <select id="selectListByExample" parameterType="com.turn.inscription.dao.entity.InscriptionHolderExample" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from inscription_holder
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause" />
+        </if>
+        <if test="orderByClause != null">
+            order by ${orderByClause}
+        </if>
+    </select>
+</mapper>

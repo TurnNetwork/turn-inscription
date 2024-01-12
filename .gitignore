@@ -1,0 +1,48 @@
+*/build
+HELP.md
+.gradle
+/build/
+!gradle/wrapper/gradle-wrapper.jar
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+/out/
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+### TMP Files ###
+/inscription-agent/logs
+/inscription-api/logs
+/logs/*
+/apidoc/
+/out/*
+/build/*
+/out/ 
+/bin/
+
+apidoc.zip
+
+/inscription-agent/out
+/inscription-api/out
+/inscription-common/out
+/inscription-service/out
+/apolloCache/
+/adjust.log
+*info.md

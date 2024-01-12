@@ -1,0 +1,470 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.turn.inscription.dao.mapper.InscriptionInventoryMapper">
+  <resultMap id="BaseResultMap" type="com.turn.inscription.dao.entity.InscriptionInventory">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="inscription_id" jdbcType="VARCHAR" property="inscriptionId" />
+    <result column="owner" jdbcType="VARCHAR" property="owner" />
+    <result column="tick" jdbcType="VARCHAR" property="tick" />
+    <result column="ext" jdbcType="VARCHAR" property="ext" />
+    <result column="num" jdbcType="VARCHAR" property="num" />
+    <result column="balance" jdbcType="BIGINT" property="balance" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="inscription_tx_qty" jdbcType="INTEGER" property="inscriptionTxQty" />
+    <result column="inscription_owner_tx_qty" jdbcType="INTEGER" property="inscriptionOwnerTxQty" />
+    <result column="retry_num" jdbcType="INTEGER" property="retryNum" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.turn.inscription.dao.entity.InscriptionInventory">
+    <result column="description" jdbcType="LONGVARCHAR" property="description" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, inscription_id, `owner`, tick, ext, num, balance, create_time, update_time, inscription_tx_qty, 
+    inscription_owner_tx_qty, retry_num
+  </sql>
+  <sql id="Blob_Column_List">
+    description
+  </sql>
+  <select id="selectByExampleWithBLOBs" parameterType="com.turn.inscription.dao.entity.InscriptionInventoryExample" resultMap="ResultMapWithBLOBs">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from inscription_inventory
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByExample" parameterType="com.turn.inscription.dao.entity.InscriptionInventoryExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from inscription_inventory
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from inscription_inventory
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from inscription_inventory
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.turn.inscription.dao.entity.InscriptionInventoryExample">
+    delete from inscription_inventory
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.turn.inscription.dao.entity.InscriptionInventory">
+    insert into inscription_inventory (id, inscription_id, `owner`, 
+      tick, ext, num, balance, 
+      create_time, update_time, inscription_tx_qty, 
+      inscription_owner_tx_qty, retry_num, description
+      )
+    values (#{id,jdbcType=BIGINT}, #{inscriptionId,jdbcType=VARCHAR}, #{owner,jdbcType=VARCHAR}, 
+      #{tick,jdbcType=VARCHAR}, #{ext,jdbcType=VARCHAR}, #{num,jdbcType=VARCHAR}, #{balance,jdbcType=BIGINT}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{inscriptionTxQty,jdbcType=INTEGER}, 
+      #{inscriptionOwnerTxQty,jdbcType=INTEGER}, #{retryNum,jdbcType=INTEGER}, #{description,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.turn.inscription.dao.entity.InscriptionInventory">
+    insert into inscription_inventory
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="inscriptionId != null">
+        inscription_id,
+      </if>
+      <if test="owner != null">
+        `owner`,
+      </if>
+      <if test="tick != null">
+        tick,
+      </if>
+      <if test="ext != null">
+        ext,
+      </if>
+      <if test="num != null">
+        num,
+      </if>
+      <if test="balance != null">
+        balance,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="inscriptionTxQty != null">
+        inscription_tx_qty,
+      </if>
+      <if test="inscriptionOwnerTxQty != null">
+        inscription_owner_tx_qty,
+      </if>
+      <if test="retryNum != null">
+        retry_num,
+      </if>
+      <if test="description != null">
+        description,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="inscriptionId != null">
+        #{inscriptionId,jdbcType=VARCHAR},
+      </if>
+      <if test="owner != null">
+        #{owner,jdbcType=VARCHAR},
+      </if>
+      <if test="tick != null">
+        #{tick,jdbcType=VARCHAR},
+      </if>
+      <if test="ext != null">
+        #{ext,jdbcType=VARCHAR},
+      </if>
+      <if test="num != null">
+        #{num,jdbcType=VARCHAR},
+      </if>
+      <if test="balance != null">
+        #{balance,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="inscriptionTxQty != null">
+        #{inscriptionTxQty,jdbcType=INTEGER},
+      </if>
+      <if test="inscriptionOwnerTxQty != null">
+        #{inscriptionOwnerTxQty,jdbcType=INTEGER},
+      </if>
+      <if test="retryNum != null">
+        #{retryNum,jdbcType=INTEGER},
+      </if>
+      <if test="description != null">
+        #{description,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.turn.inscription.dao.entity.InscriptionInventoryExample" resultType="java.lang.Long">
+    select count(*) from inscription_inventory
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update inscription_inventory
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.inscriptionId != null">
+        inscription_id = #{record.inscriptionId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.owner != null">
+        `owner` = #{record.owner,jdbcType=VARCHAR},
+      </if>
+      <if test="record.tick != null">
+        tick = #{record.tick,jdbcType=VARCHAR},
+      </if>
+      <if test="record.ext != null">
+        ext = #{record.ext,jdbcType=VARCHAR},
+      </if>
+      <if test="record.num != null">
+        num = #{record.num,jdbcType=VARCHAR},
+      </if>
+      <if test="record.balance != null">
+        balance = #{record.balance,jdbcType=BIGINT},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateTime != null">
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.inscriptionTxQty != null">
+        inscription_tx_qty = #{record.inscriptionTxQty,jdbcType=INTEGER},
+      </if>
+      <if test="record.inscriptionOwnerTxQty != null">
+        inscription_owner_tx_qty = #{record.inscriptionOwnerTxQty,jdbcType=INTEGER},
+      </if>
+      <if test="record.retryNum != null">
+        retry_num = #{record.retryNum,jdbcType=INTEGER},
+      </if>
+      <if test="record.description != null">
+        description = #{record.description,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map">
+    update inscription_inventory
+    set id = #{record.id,jdbcType=BIGINT},
+      inscription_id = #{record.inscriptionId,jdbcType=VARCHAR},
+      `owner` = #{record.owner,jdbcType=VARCHAR},
+      tick = #{record.tick,jdbcType=VARCHAR},
+      ext = #{record.ext,jdbcType=VARCHAR},
+      num = #{record.num,jdbcType=VARCHAR},
+      balance = #{record.balance,jdbcType=BIGINT},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      inscription_tx_qty = #{record.inscriptionTxQty,jdbcType=INTEGER},
+      inscription_owner_tx_qty = #{record.inscriptionOwnerTxQty,jdbcType=INTEGER},
+      retry_num = #{record.retryNum,jdbcType=INTEGER},
+      description = #{record.description,jdbcType=LONGVARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update inscription_inventory
+    set id = #{record.id,jdbcType=BIGINT},
+      inscription_id = #{record.inscriptionId,jdbcType=VARCHAR},
+      `owner` = #{record.owner,jdbcType=VARCHAR},
+      tick = #{record.tick,jdbcType=VARCHAR},
+      ext = #{record.ext,jdbcType=VARCHAR},
+      num = #{record.num,jdbcType=VARCHAR},
+      balance = #{record.balance,jdbcType=BIGINT},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      inscription_tx_qty = #{record.inscriptionTxQty,jdbcType=INTEGER},
+      inscription_owner_tx_qty = #{record.inscriptionOwnerTxQty,jdbcType=INTEGER},
+      retry_num = #{record.retryNum,jdbcType=INTEGER}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.turn.inscription.dao.entity.InscriptionInventory">
+    update inscription_inventory
+    <set>
+      <if test="inscriptionId != null">
+        inscription_id = #{inscriptionId,jdbcType=VARCHAR},
+      </if>
+      <if test="owner != null">
+        `owner` = #{owner,jdbcType=VARCHAR},
+      </if>
+      <if test="tick != null">
+        tick = #{tick,jdbcType=VARCHAR},
+      </if>
+      <if test="ext != null">
+        ext = #{ext,jdbcType=VARCHAR},
+      </if>
+      <if test="num != null">
+        num = #{num,jdbcType=VARCHAR},
+      </if>
+      <if test="balance != null">
+        balance = #{balance,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="inscriptionTxQty != null">
+        inscription_tx_qty = #{inscriptionTxQty,jdbcType=INTEGER},
+      </if>
+      <if test="inscriptionOwnerTxQty != null">
+        inscription_owner_tx_qty = #{inscriptionOwnerTxQty,jdbcType=INTEGER},
+      </if>
+      <if test="retryNum != null">
+        retry_num = #{retryNum,jdbcType=INTEGER},
+      </if>
+      <if test="description != null">
+        description = #{description,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.turn.inscription.dao.entity.InscriptionInventory">
+    update inscription_inventory
+    set inscription_id = #{inscriptionId,jdbcType=VARCHAR},
+      `owner` = #{owner,jdbcType=VARCHAR},
+      tick = #{tick,jdbcType=VARCHAR},
+      ext = #{ext,jdbcType=VARCHAR},
+      num = #{num,jdbcType=VARCHAR},
+      balance = #{balance,jdbcType=BIGINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      inscription_tx_qty = #{inscriptionTxQty,jdbcType=INTEGER},
+      inscription_owner_tx_qty = #{inscriptionOwnerTxQty,jdbcType=INTEGER},
+      retry_num = #{retryNum,jdbcType=INTEGER},
+      description = #{description,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.turn.inscription.dao.entity.InscriptionInventory">
+    update inscription_inventory
+    set inscription_id = #{inscriptionId,jdbcType=VARCHAR},
+      `owner` = #{owner,jdbcType=VARCHAR},
+      tick = #{tick,jdbcType=VARCHAR},
+      ext = #{ext,jdbcType=VARCHAR},
+      num = #{num,jdbcType=VARCHAR},
+      balance = #{balance,jdbcType=BIGINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      inscription_tx_qty = #{inscriptionTxQty,jdbcType=INTEGER},
+      inscription_owner_tx_qty = #{inscriptionOwnerTxQty,jdbcType=INTEGER},
+      retry_num = #{retryNum,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <insert id="batchInsert" parameterType="map">
+    <!--
+      WARNING - @mbg.generated
+      This element is automatically generated by MyBatis Generator, do not modify.
+      @project https://github.com/itfsw/mybatis-generator-plugin
+    -->
+    insert into inscription_inventory
+    (id, inscription_id, `owner`, tick, ext, num, balance, create_time, update_time, 
+      inscription_tx_qty, inscription_owner_tx_qty, retry_num, description)
+    values
+    <foreach collection="list" item="item" separator=",">
+      (#{item.id,jdbcType=BIGINT}, #{item.inscriptionId,jdbcType=VARCHAR}, #{item.owner,jdbcType=VARCHAR}, 
+        #{item.tick,jdbcType=VARCHAR}, #{item.ext,jdbcType=VARCHAR}, #{item.num,jdbcType=VARCHAR}, 
+        #{item.balance,jdbcType=BIGINT}, #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateTime,jdbcType=TIMESTAMP}, 
+        #{item.inscriptionTxQty,jdbcType=INTEGER}, #{item.inscriptionOwnerTxQty,jdbcType=INTEGER}, 
+        #{item.retryNum,jdbcType=INTEGER}, #{item.description,jdbcType=LONGVARCHAR})
+    </foreach>
+  </insert>
+  <insert id="batchInsertSelective" parameterType="map">
+    <!--
+      WARNING - @mbg.generated
+      This element is automatically generated by MyBatis Generator, do not modify.
+      @project https://github.com/itfsw/mybatis-generator-plugin
+    -->
+    insert into inscription_inventory (
+    <foreach collection="selective" item="column" separator=",">
+      ${column.escapedColumnName}
+    </foreach>
+    )
+    values
+    <foreach collection="list" item="item" separator=",">
+      (
+      <foreach collection="selective" item="column" separator=",">
+        <if test="'id'.toString() == column.value">
+          #{item.id,jdbcType=BIGINT}
+        </if>
+        <if test="'inscription_id'.toString() == column.value">
+          #{item.inscriptionId,jdbcType=VARCHAR}
+        </if>
+        <if test="'owner'.toString() == column.value">
+          #{item.owner,jdbcType=VARCHAR}
+        </if>
+        <if test="'tick'.toString() == column.value">
+          #{item.tick,jdbcType=VARCHAR}
+        </if>
+        <if test="'ext'.toString() == column.value">
+          #{item.ext,jdbcType=VARCHAR}
+        </if>
+        <if test="'num'.toString() == column.value">
+          #{item.num,jdbcType=VARCHAR}
+        </if>
+        <if test="'balance'.toString() == column.value">
+          #{item.balance,jdbcType=BIGINT}
+        </if>
+        <if test="'create_time'.toString() == column.value">
+          #{item.createTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="'update_time'.toString() == column.value">
+          #{item.updateTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="'inscription_tx_qty'.toString() == column.value">
+          #{item.inscriptionTxQty,jdbcType=INTEGER}
+        </if>
+        <if test="'inscription_owner_tx_qty'.toString() == column.value">
+          #{item.inscriptionOwnerTxQty,jdbcType=INTEGER}
+        </if>
+        <if test="'retry_num'.toString() == column.value">
+          #{item.retryNum,jdbcType=INTEGER}
+        </if>
+        <if test="'description'.toString() == column.value">
+          #{item.description,jdbcType=LONGVARCHAR}
+        </if>
+      </foreach>
+      )
+    </foreach>
+  </insert>
+</mapper>
