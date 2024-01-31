@@ -1,6 +1,6 @@
 -- Full script
-CREATE DATABASE IF NOT EXISTS `scan_turn` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE `scan_turn`;
+CREATE DATABASE IF NOT EXISTS `turn_inscription` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE `turn_inscription`;
 
 DROP TABLE IF EXISTS `address`;
 CREATE TABLE `address`
