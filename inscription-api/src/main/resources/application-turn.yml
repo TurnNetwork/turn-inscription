@@ -97,7 +97,7 @@ server:
       max: 2000
       min-spare: 800
   servlet:
-    context-path: /browser-server
+    context-path: /inscription
 #Log configuration
 logging:
   #Log level
