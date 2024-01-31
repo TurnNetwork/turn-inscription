@@ -11,6 +11,8 @@ import java.util.Date;
  */
 public class InscriptionDetailsResp {
 
+    private String contractAddress;
+
     private String inscriptionId;
 
     private String tick;
@@ -41,6 +43,14 @@ public class InscriptionDetailsResp {
 
     public BigDecimal getProgress() {
         return progress;
+    }
+
+    public String getContractAddress() {
+        return contractAddress;
+    }
+
+    public void setContractAddress(String contractAddress) {
+        this.contractAddress = contractAddress;
     }
 
     public void setProgress(BigDecimal progress) {

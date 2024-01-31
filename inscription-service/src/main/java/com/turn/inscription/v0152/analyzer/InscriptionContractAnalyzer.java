@@ -8,6 +8,7 @@ import com.bubble.parameters.NetworkParameters;
 import com.bubble.tx.gas.ContractGasProvider;
 import com.bubble.tx.gas.GasProvider;
 import com.turn.inscription.bean.CollectionTransaction;
+import com.turn.inscription.bean.InscriptionHolderCount;
 import com.turn.inscription.bean.InscriptionInventoryDetail;
 import com.turn.inscription.bean.InscriptionVO;
 import com.turn.inscription.config.BlockChainConfig;
@@ -21,6 +22,7 @@ import com.turn.inscription.service.elasticsearch.EsInscriptionTxService;
 import com.turn.inscription.utils.CommonUtil;
 import com.turn.inscription.v0152.bean.*;
 import com.turn.inscription.v0152.service.InscriptionDetectService;
+import com.xxl.job.core.context.XxlJobHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -128,7 +130,7 @@ public class InscriptionContractAnalyzer {
                 Map<String,String> map = JSONObject.parseObject(eventInfo, Map.class);
                 map.keySet().stream().forEach(x->{
                     if(InscriptionEventTypeEnum.MINT_EVENT.getDesc().equals(x)){
-                        //Handle creation game events
+                        //Handle mint events
                         String eventStr = map.get(x);
                         List<JSONObject> mintEventResponses = JSONObject.parseObject(eventStr, List.class);
                         mintHandle(inscription,mintEventResponses,tx);
@@ -186,6 +188,7 @@ public class InscriptionContractAnalyzer {
             customInscriptionMapper.updateMinted(inscription.getContractAddress(),inscription.getLimitPerMint());
         });
         handleInscriptionHolder(txInscriptionBakList,inscription);
+        updateInscriptionHolderCount(inscription);
         inscriptionInventoryMapper.batchInsert(inscriptionInventories);
         txInscriptionBakMapper.batchInsert(txInscriptionBakList);
 
@@ -198,6 +201,19 @@ public class InscriptionContractAnalyzer {
         }
     }
 
+    /**
+     * Update the number of holders corresponding to the inscription
+     *
+     * @param
+     * @param inscription
+     * @return void
+     */
+    private void updateInscriptionHolderCount(Inscription inscription) {
+        Integer holdCount = customInscriptionHolderMapper.inscriptionHolderCount(inscription.getInscriptionId());
+        if (!inscription.getHolders().equals(holdCount)) {
+            customInscriptionMapper.updateHolders(holdCount,inscription.getContractAddress());
+        }
+    }
     /**
      * parse Token Holder
      */

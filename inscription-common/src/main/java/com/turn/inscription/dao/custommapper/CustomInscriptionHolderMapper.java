@@ -15,4 +15,6 @@ public interface CustomInscriptionHolderMapper {
     InscriptionHolder selectByKey(InscriptionHolderKey key);
 
     Page<InscriptionHolder> selectListByExample(InscriptionHolderExample inscriptionHolderExample);
+
+    Integer inscriptionHolderCount(String inscriptionId);
 }

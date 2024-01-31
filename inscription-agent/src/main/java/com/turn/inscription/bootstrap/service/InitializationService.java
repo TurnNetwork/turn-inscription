@@ -19,6 +19,7 @@ import com.turn.inscription.utils.EpochUtil;
 import com.turn.inscription.v0152.analyzer.ErcCache;
 import com.bubble.contracts.dpos.dto.resp.Node;
 import com.turn.inscription.v0152.analyzer.GameCache;
+import com.turn.inscription.v0152.analyzer.InscriptionCache;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -30,7 +31,7 @@ import java.math.BigInteger;
 import java.util.*;
 
 /**
- * @description: 启动初始化服务
+ * @description: Start initialization service
  **/
 @Slf4j
 @Service
@@ -114,33 +115,32 @@ public class InitializationService {
     private GameCache gameCache;
 
     @Resource
+    private InscriptionCache inscriptionCache;
+
+    @Resource
     private EsInscriptionTxRepository esInscriptionTxRepository;
 
     /**
-     * 进入应用初始化子流程
-     *
-     * @param traceId
-     * @return com.turn.browser.bootstrap.bean.InitializationResult
-     * @date 2021/4/19
+     * Enter the application initialization sub-process
      */
     @Transactional(rollbackFor = {Exception.class, Error.class})
     public InitializationResult init(String traceId) throws BlockNumberException {
-        log.info("进入应用初始化子流程");
+        log.info("Enter the application initialization sub-process");
         proposalCache.init();
         ercCache.init();
-        // 初始化ES
+        //Initialize ES
         initEs();
-        // 检查数据库network_stat表,如果没有记录则添加一条,并从链上查询最新内置验证人节点入库至staking表和node表
+        // Check the database network_stat table, if there is no record, add one, and query the latest built-in validator node from the chain and store it in the staking table and node table
         NetworkStat networkStat = networkStatMapper.selectByPrimaryKey(1);
         if (networkStat == null) {
-            // 确保chainConfig先就绪
+            // Make sure chainConfig is ready first
             try {
                 parameterService.initConfigTable();
             } catch (Exception e) {
                 log.error("", e);
-                throw new BusinessException("初始化错误:" + e.getMessage());
+                throw new BusinessException("Initialization error:" + e.getMessage());
             }
-            // 创建新的统计记录
+            //Create new statistics record
             networkStat = CollectionNetworkStat.newInstance();
             networkStat.setId(1);
             networkStat.setCurNumber(-1L);
@@ -151,60 +151,63 @@ public class InitializationService {
             networkStat.setErc1155TxQty(0);
             networkStatMapper.insert(networkStat);
             initialResult.setCollectedBlockNumber(-1L);
-            // 删除节点表和质押表、地址表数据
+            // Delete the node table, pledge table, and address table data
             nodeMapper.deleteByExample(null);
             stakingMapper.deleteByExample(null);
             addressMapper.deleteByExample(null);
-            log.info("删除节点表、质押表、地址表数据");
-            // 初始化内置节点
+            log.info("Delete node table, pledge table, address table data");
+            //Initialize the built-in node
             List<com.turn.inscription.dao.entity.Node> nodeList = initInnerStake();
-            // 初始化节点缓存
+            //Initialize node cache
             nodeCache.init(nodeList);
-            // 初始化网络缓存
+            //Initialize network cache
             networkStatCache.init(networkStat);
-            // 初始化内置地址
+            //Initialize the built-in address
             addressCache.initOnFirstStart();
             return initialResult;
         }
 
-        // 确保chainConfig先就绪
+        // Make sure chainConfig is ready first
         parameterService.overrideBlockChainConfig();
 
         initialResult.setCollectedBlockNumber(networkStat.getCurNumber());
 
-        // 初始化节点缓存
+        //Initialize node cache
         List<com.turn.inscription.dao.entity.Node> nodeList = nodeMapper.selectByExample(null);
         nodeCache.init(nodeList);
 
-        // 初始化EVM合约地址缓存，用于后续交易的类型判断（调用EVM合约）
+        // Initialize the EVM contract address cache for type judgment of subsequent transactions (calling the EVM contract)
         AddressExample addressExample = new AddressExample();
         addressExample.createCriteria().andTypeEqualTo(AddressTypeEnum.EVM_CONTRACT.getCode());
         List<Address> addressList = addressMapper.selectByExample(addressExample);
         addressCache.initEvmContractAddressCache(addressList);
 
-        // 初始化EVM合约地址缓存，用于后续交易的类型判断（调用EVM合约）
+        // Initialize the EVM contract address cache for type judgment of subsequent transactions (calling the EVM contract)
         addressExample = new AddressExample();
         addressExample.createCriteria().andTypeEqualTo(AddressTypeEnum.ERC20_EVM_CONTRACT.getCode());
         addressList = addressMapper.selectByExample(addressExample);
 
-        // 初始化WASM合约地址缓存，用于后续交易的类型判断（调用WASM合约）
+        // Initialize the WASM contract address cache, which is used to determine the type of subsequent transactions (calling the WASM contract)
         addressExample = new AddressExample();
         addressExample.createCriteria().andTypeEqualTo(AddressTypeEnum.WASM_CONTRACT.getCode());
         addressList = addressMapper.selectByExample(addressExample);
         addressCache.initWasmContractAddressCache(addressList);
 
-        // 初始化游戏合约
+        //Initialize the game contract
         gameCache.init();
 
-        // 初始化网络缓存
+        //Initialize the inscription contract
+        inscriptionCache.init();
+
+        //Initialize network cache
         networkStatCache.init(networkStat);
 
-        // 确保epochRetryService中的各种属性处于当前块状态：当前共识和结算周期验证人、前一共识和结算周期验证人等
+        // Ensure that various attributes in epochRetryService are in the current block state: current consensus and settlement cycle validators, previous consensus and settlement cycle validators, etc.
         epochRetryService.issueChange(BigInteger.valueOf(networkStat.getCurNumber()));
         epochRetryService.settlementChange(BigInteger.valueOf(networkStat.getCurNumber()));
         epochRetryService.consensusChange(BigInteger.valueOf(networkStat.getCurNumber()));
 
-        // 检查gas price估算数据表
+        // Check the gas price estimation data table
         GasEstimateLogExample condition = new GasEstimateLogExample();
         condition.setOrderByClause("seq asc");
         List<GasEstimateLog> gasEstimateLogs = gasEstimateLogMapper.selectByExample(condition);
@@ -219,12 +222,12 @@ public class InitializationService {
     }
 
     /**
-     * 初始化入库内部质押节点
+     * Initialize the warehousing internal pledge node
      *
      * @throws Exception
      */
     private List<com.turn.inscription.dao.entity.Node> initInnerStake() throws BlockNumberException {
-        log.info("初始化内置节点");
+        log.info("Initialize built-in nodes");
         epochRetryService.issueChange(BigInteger.ZERO);
         epochRetryService.settlementChange(BigInteger.ZERO);
         epochRetryService.consensusChange(BigInteger.ZERO);
@@ -236,7 +239,7 @@ public class InitializationService {
         Set<String> validatorSet = new HashSet<>();
         validators.forEach(v -> validatorSet.add(v.getNodeId()));
 
-        // 配置中的默认内置节点信息
+        // Default built-in node information in configuration
         Map<String, CustomStaking> defaultStakingMap = new HashMap<>();
         chainConfig.getDefaultStakingList().forEach(staking -> defaultStakingMap.put(staking.getNodeId(), staking));
 
@@ -246,13 +249,13 @@ public class InitializationService {
             CustomStaking staking = new CustomStaking();
             staking.updateWithVerifier(v);
             staking.setStakingTxIndex(index);
-            // 提前设置验证轮数
+            // Set the number of verification rounds in advance
             staking.setStakingReductionEpoch(BigInteger.ONE.intValue());
             staking.setStatus(CustomStaking.StatusEnum.CANDIDATE.getCode());
             staking.setIsInit(CustomStaking.YesNoEnum.YES.getCode());
             staking.setIsSettle(CustomStaking.YesNoEnum.YES.getCode());
             staking.setStakingLocked(chainConfig.getDefaultStakingLockedAmount());
-            // 如果当前候选节点在共识周期验证人列表，则标识其为共识周期节点
+            // If the current candidate node is in the consensus cycle validator list, identify it as a consensus cycle node
             if (validatorSet.contains(v.getNodeId())) {
                 staking.setIsConsensus(CustomStaking.YesNoEnum.YES.getCode());
             }
@@ -261,22 +264,22 @@ public class InitializationService {
                 staking.setNodeName("turn.node." + (index + 1));
             }
 
-            // 更新年化率信息, 由于是周期开始，所以只记录成本，收益需要在结算周期切换时算
+            //Update the annualized rate information. Since it is the beginning of the cycle, only the cost is recorded. The income needs to be calculated when the settlement cycle switches.
             AnnualizedRateInfo ari = new AnnualizedRateInfo();
-            // |- 质押的成本
+            // |- Cost of staking
             List<PeriodValueElement> stakeCosts = new ArrayList<>();
             stakeCosts.add(new PeriodValueElement().setPeriod(0L).setValue(BigDecimal.ZERO));
-            BigDecimal stakeCostVal = staking.getStakingLocked() // 锁定的质押金
-                                             .add(staking.getStakingHes()) // 犹豫期的质押金
-                                             .add(staking.getStatDelegateHes()) // 犹豫期的委托金
-                                             .add(staking.getStatDelegateLocked()); // 锁定的委托金
+            BigDecimal stakeCostVal = staking.getStakingLocked() // Locked pledge
+                    .add(staking.getStakingHes()) // Deposit during the hesitation period
+                    .add(staking.getStatDelegateHes()) // Commission fee during the hesitation period
+                    .add(staking.getStatDelegateLocked()); // Locked commission
             stakeCosts.add(new PeriodValueElement().setPeriod(1L).setValue(stakeCostVal));
             ari.setStakeCost(stakeCosts);
-            // |- 委托的成本
+            // |- The cost of the commission
             List<PeriodValueElement> delegateCosts = new ArrayList<>();
             delegateCosts.add(new PeriodValueElement().setPeriod(0L).setValue(BigDecimal.ZERO));
-            BigDecimal delegateCostVal = staking.getStatDelegateLocked() // 锁定的委托金
-                                                .add(staking.getStatDelegateHes()); // 犹豫期的委托金
+            BigDecimal delegateCostVal = staking.getStatDelegateLocked() // Locked commission
+                    .add(staking.getStatDelegateHes()); // Commission fee during the hesitation period
             delegateCosts.add(new PeriodValueElement().setPeriod(1L).setValue(delegateCostVal));
             ari.setDelegateCost(delegateCosts);
 
@@ -284,18 +287,18 @@ public class InitializationService {
             staking.setPredictStakingReward(epochRetryService.getStakeReward());
 
             staking.setRewardPer(0);
-            staking.setNextRewardPer(0); // 下一结算周期委托奖励比例
-            staking.setNextRewardPerModEpoch(0); // 【下一结算周期委托奖励比例】修改所在结算周期
+            staking.setNextRewardPer(0); // Commission reward ratio in the next settlement cycle
+            staking.setNextRewardPerModEpoch(0); // [Delegation reward ratio in the next settlement period] Modify the settlement period
             staking.setDeleAnnualizedRate(0.0);
             staking.setPreDeleAnnualizedRate(0.0);
             staking.setHaveDeleReward(BigDecimal.ZERO);
             staking.setTotalDeleReward(BigDecimal.ZERO);
             staking.setExceptionStatus(1);
 
-            BigInteger curSettleEpochRound = EpochUtil.getEpoch(BigInteger.ONE, chainConfig.getSettlePeriodBlockCount()); // 当前块所处的结算周期轮数
-            // 更新解质押到账需要经过的结算周期数
+            BigInteger curSettleEpochRound = EpochUtil.getEpoch(BigInteger.ONE, chainConfig.getSettlePeriodBlockCount()); // The settlement cycle number of the current block
+            //Update the number of settlement cycles required to release the pledge to the account
             BigInteger unStakeFreezeDuration = stakeEpochService.getUnStakeFreeDuration();
-            // 理论上的退出区块号, 实际的退出块号还要跟状态为进行中的提案的投票截至区块进行对比，取最大者
+            // Theoretical exit block number, the actual exit block number should be compared with the voting deadline block of the proposal with status in progress, whichever is the largest
             BigInteger unStakeEndBlock = stakeEpochService.getUnStakeEndBlock("", curSettleEpochRound, false);
             staking.setUnStakeFreezeDuration(unStakeFreezeDuration.intValue());
             staking.setUnStakeEndBlock(unStakeEndBlock.longValue());
@@ -303,15 +306,15 @@ public class InitializationService {
             staking.setZeroProduceFreezeDuration(0);
             staking.setZeroProduceFreezeEpoch(0);
 
-            // 使用当前质押信息生成节点信息
+            // Use the current pledge information to generate node information
             CustomNode node = new CustomNode();
             node.updateWithCustomStaking(staking);
             node.setStakingTxIndex(index);
             node.setTotalValue(staking.getStakingLocked());
             node.setIsRecommend(CustomNode.YesNoEnum.NO.getCode());
-            // 提前设置验证轮数
+            //Set the number of verification rounds in advance
             node.setStatVerifierTime(BigInteger.ONE.intValue());
-            // 期望出块数=共识周期块数/实际参与共识节点数
+            // Expected number of blocks = number of blocks in the consensus cycle/actual number of nodes participating in the consensus
             node.setStatExpectBlockQty(epochRetryService.getExpectBlockCount());
             node.setPreTotalDeleReward(BigDecimal.ZERO);
 
@@ -319,7 +322,7 @@ public class InitializationService {
             stakingList.add(staking);
         }
 
-        // 入库
+        // Warehouse
         List<com.turn.inscription.dao.entity.Node> returnData = new ArrayList<>(nodes);
         if (!nodes.isEmpty()) {
             nodeMapper.batchInsert(returnData);
@@ -331,14 +334,10 @@ public class InitializationService {
     }
 
     /**
-     * 初始化ES
-     *
-     * @param
-     * @return void
-     * @date 2021/4/19
+     * Initialize ES
      */
     private void initEs() {
-        log.info("初始化ES");
+        log.info("Initialize ES");
         try {
             esBlockRepository.initIndex();
             esTransactionRepository.initIndex();
@@ -351,7 +350,7 @@ public class InitializationService {
             esMicroNodeOptRepository.initIndex();
             esInscriptionTxRepository.initIndex();
         } catch (Exception e) {
-            log.error("初始化ES异常", e);
+            log.error("Initialization ES exception", e);
         }
 
     }

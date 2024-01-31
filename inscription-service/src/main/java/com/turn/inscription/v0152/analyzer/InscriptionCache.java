@@ -29,7 +29,7 @@ public class InscriptionCache {
         List<Inscription> inscriptions = inscriptionMapper.selectByExample(null);
         inscriptions.forEach(inscription -> {
             inscriptionAddrCache.add(inscription.getContractAddress());
-            inscriptionMapCache.put(inscription.getInscriptionId(), inscription);
+            inscriptionMapCache.put(inscription.getContractAddress(), inscription);
         });
     }
     public Collection<String> getInscriptionCache() {

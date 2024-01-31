@@ -96,7 +96,7 @@
             )
         </foreach>
     </insert>
-    <select id="selectByKey" resultType="com.turn.inscription.dao.entity.InscriptionHolder">
+    <select id="selectByKey"  resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List" />
         from inscription_holder
@@ -113,5 +113,11 @@
         <if test="orderByClause != null">
             order by ${orderByClause}
         </if>
+    </select>
+    <select id="inscriptionHolderCount" resultType="java.lang.Integer">
+        select  count(1)
+        from inscription_holder t
+        where inscription_id = #{inscriptionId}
+        group by inscription_id
     </select>
 </mapper>

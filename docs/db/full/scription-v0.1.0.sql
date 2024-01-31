@@ -827,7 +827,7 @@ CREATE TABLE `inscription_inventory` (
                                          `owner` varchar(64) NOT NULL COMMENT 'inscription id corresponds to the holder address',
                                          `tick` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT 'tick name',
                                          `description` longtext COMMENT 'Describes the tick',
-                                         `ext` varchar(100) DEFAULT NULL COMMENT 'ext',
+                                         `ext` varchar(256) DEFAULT NULL COMMENT 'ext',
                                          `num` varchar(256) DEFAULT NULL COMMENT 'inscription number',
                                          `balance` bigint DEFAULT NULL COMMENT 'balance',
                                          `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Creation time',

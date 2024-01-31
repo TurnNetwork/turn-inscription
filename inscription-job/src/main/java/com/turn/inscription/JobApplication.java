@@ -29,7 +29,7 @@ import java.util.Properties;
 @EnableScheduling
 @SpringBootApplication
 @EnableEncryptableProperties
-@MapperScan(basePackages = {"com.turn.browser", "com.turn.browser.dao.mapper", "com.turn.browser.dao.custommapper"})
+@MapperScan(basePackages = {"com.turn.inscription", "com.turn.inscription.dao.mapper", "com.turn.inscription.dao.custommapper"})
 public class JobApplication implements ApplicationRunner {
 
     static {

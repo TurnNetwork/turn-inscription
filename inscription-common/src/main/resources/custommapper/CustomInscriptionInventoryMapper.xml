@@ -83,9 +83,11 @@
     <sql id="Blob_Column_List">
         description
     </sql>
-    <select id="selectListByExample" parameterType="com.turn.inscription.dao.entity.InscriptionInventoryExample" resultMap="BaseResultMap">
+    <select id="selectListByExample" parameterType="com.turn.inscription.dao.entity.InscriptionInventoryExample" resultMap="ResultMapWithBLOBs">
         select
         <include refid="Base_Column_List" />
+        ,
+        <include refid="Blob_Column_List" />
         from inscription_inventory
         <if test="_parameter != null">
             <include refid="Example_Where_Clause" />
