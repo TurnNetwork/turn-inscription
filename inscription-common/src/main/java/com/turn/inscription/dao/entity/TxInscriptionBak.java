@@ -13,6 +13,8 @@ public class TxInscriptionBak {
 
     private String inscriptionId;
 
+    private String tick;
+
     private String hash;
 
     private String from;
@@ -67,6 +69,14 @@ public class TxInscriptionBak {
 
     public void setInscriptionId(String inscriptionId) {
         this.inscriptionId = inscriptionId == null ? null : inscriptionId.trim();
+    }
+
+    public String getTick() {
+        return tick;
+    }
+
+    public void setTick(String tick) {
+        this.tick = tick == null ? null : tick.trim();
     }
 
     public String getHash() {
@@ -177,6 +187,7 @@ public class TxInscriptionBak {
         seq("seq", "seq", "BIGINT", false),
         contract("contract", "contract", "VARCHAR", false),
         inscriptionId("inscription_id", "inscriptionId", "VARCHAR", false),
+        tick("tick", "tick", "VARCHAR", false),
         hash("hash", "hash", "VARCHAR", false),
         from("from", "from", "VARCHAR", true),
         fromType("from_type", "fromType", "INTEGER", false),

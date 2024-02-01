@@ -68,14 +68,6 @@ public class InscriptionTxService {
     @Resource
     private EsInscriptionTxRepository esInscriptionTxRepository;
 
-    @Resource
-    private StatisticCacheService statisticCacheService;
-
-    /**
-     * Default precision
-     */
-    private static final Integer decimal = 6;
-
     public RespPage<QueryInscriptionTransferRecordListResp> getList(QueryInscriptionTransferRecordListReq req) {
         if (log.isDebugEnabled()) {
             log.debug("~ queryTokenRecordList, params: " + JSON.toJSONString(req));
@@ -111,7 +103,7 @@ public class InscriptionTxService {
         // Set sort field
         constructor.setDesc("seq");
         // response filed to show.
-        constructor.setResult(new String[]{"seq", "hash", "bn", "from", "contract", "to", "inscriptionId", "value", "result", "bTime", "num", "type"});
+        constructor.setResult(new String[]{"seq", "hash", "bn", "from", "contract", "to", "inscriptionId", "value", "result", "bTime", "num", "type", "tick"});
 
         ESQueryBuilderConstructor count = new ESQueryBuilderConstructor();
 

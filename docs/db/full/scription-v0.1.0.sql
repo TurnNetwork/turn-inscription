@@ -845,6 +845,7 @@ CREATE TABLE `tx_inscription_bak` (
                                       `seq` bigint NOT NULL COMMENT 'serial number ID',
                                       `contract` varchar(42) NOT NULL COMMENT 'Contract address',
                                       `inscription_id` varchar(255) NOT NULL COMMENT 'inscription Id',
+                                      `tick` varchar(100) DEFAULT NULL COMMENT 'inscription tick',
                                       `hash` varchar(72) NOT NULL COMMENT 'Transaction Hash',
                                       `from` varchar(42) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT 'from address',
                                       `from_type` int DEFAULT NULL COMMENT 'Sender type',

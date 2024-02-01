@@ -191,6 +191,7 @@ public class InscriptionContractAnalyzer {
             txInscriptionBak.setValue(inscription.getLimitPerMint().toString());
             txInscriptionBak.setNum(item._curPid.longValue());
             txInscriptionBak.setType(InscriptionTxTypeEnum.MINT.getCode());
+            txInscriptionBak.setTick(inscription.getTick());
             txInscriptionBakList.add(txInscriptionBak);
 
             customInscriptionMapper.updateMinted(inscription.getContractAddress(),inscription.getLimitPerMint());

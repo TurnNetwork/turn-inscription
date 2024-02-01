@@ -6,6 +6,7 @@
     <result column="seq" jdbcType="BIGINT" property="seq" />
     <result column="contract" jdbcType="VARCHAR" property="contract" />
     <result column="inscription_id" jdbcType="VARCHAR" property="inscriptionId" />
+    <result column="tick" jdbcType="VARCHAR" property="tick" />
     <result column="hash" jdbcType="VARCHAR" property="hash" />
     <result column="from" jdbcType="VARCHAR" property="from" />
     <result column="from_type" jdbcType="INTEGER" property="fromType" />
@@ -80,8 +81,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, seq, contract, inscription_id, hash, `from`, from_type, `to`, to_type, `value`, 
-    bn, b_time, tx_fee, num, `type`
+    id, seq, contract, inscription_id, tick, hash, `from`, from_type, `to`, to_type, 
+    `value`, bn, b_time, tx_fee, num, `type`
   </sql>
   <sql id="Blob_Column_List">
     remark
@@ -136,15 +137,15 @@
   </delete>
   <insert id="insert" parameterType="com.turn.inscription.dao.entity.TxInscriptionBak">
     insert into tx_inscription_bak (id, seq, contract, 
-      inscription_id, hash, `from`, 
-      from_type, `to`, to_type, 
-      `value`, bn, b_time, 
+      inscription_id, tick, hash, 
+      `from`, from_type, `to`, 
+      to_type, `value`, bn, b_time, 
       tx_fee, num, `type`, remark
       )
     values (#{id,jdbcType=BIGINT}, #{seq,jdbcType=BIGINT}, #{contract,jdbcType=VARCHAR}, 
-      #{inscriptionId,jdbcType=VARCHAR}, #{hash,jdbcType=VARCHAR}, #{from,jdbcType=VARCHAR}, 
-      #{fromType,jdbcType=INTEGER}, #{to,jdbcType=VARCHAR}, #{toType,jdbcType=INTEGER}, 
-      #{value,jdbcType=VARCHAR}, #{bn,jdbcType=BIGINT}, #{bTime,jdbcType=TIMESTAMP}, 
+      #{inscriptionId,jdbcType=VARCHAR}, #{tick,jdbcType=VARCHAR}, #{hash,jdbcType=VARCHAR}, 
+      #{from,jdbcType=VARCHAR}, #{fromType,jdbcType=INTEGER}, #{to,jdbcType=VARCHAR}, 
+      #{toType,jdbcType=INTEGER}, #{value,jdbcType=VARCHAR}, #{bn,jdbcType=BIGINT}, #{bTime,jdbcType=TIMESTAMP}, 
       #{txFee,jdbcType=VARCHAR}, #{num,jdbcType=BIGINT}, #{type,jdbcType=INTEGER}, #{remark,jdbcType=LONGVARCHAR}
       )
   </insert>
@@ -162,6 +163,9 @@
       </if>
       <if test="inscriptionId != null">
         inscription_id,
+      </if>
+      <if test="tick != null">
+        tick,
       </if>
       <if test="hash != null">
         hash,
@@ -212,6 +216,9 @@
       </if>
       <if test="inscriptionId != null">
         #{inscriptionId,jdbcType=VARCHAR},
+      </if>
+      <if test="tick != null">
+        #{tick,jdbcType=VARCHAR},
       </if>
       <if test="hash != null">
         #{hash,jdbcType=VARCHAR},
@@ -272,6 +279,9 @@
       <if test="record.inscriptionId != null">
         inscription_id = #{record.inscriptionId,jdbcType=VARCHAR},
       </if>
+      <if test="record.tick != null">
+        tick = #{record.tick,jdbcType=VARCHAR},
+      </if>
       <if test="record.hash != null">
         hash = #{record.hash,jdbcType=VARCHAR},
       </if>
@@ -319,6 +329,7 @@
       seq = #{record.seq,jdbcType=BIGINT},
       contract = #{record.contract,jdbcType=VARCHAR},
       inscription_id = #{record.inscriptionId,jdbcType=VARCHAR},
+      tick = #{record.tick,jdbcType=VARCHAR},
       hash = #{record.hash,jdbcType=VARCHAR},
       `from` = #{record.from,jdbcType=VARCHAR},
       from_type = #{record.fromType,jdbcType=INTEGER},
@@ -341,6 +352,7 @@
       seq = #{record.seq,jdbcType=BIGINT},
       contract = #{record.contract,jdbcType=VARCHAR},
       inscription_id = #{record.inscriptionId,jdbcType=VARCHAR},
+      tick = #{record.tick,jdbcType=VARCHAR},
       hash = #{record.hash,jdbcType=VARCHAR},
       `from` = #{record.from,jdbcType=VARCHAR},
       from_type = #{record.fromType,jdbcType=INTEGER},
@@ -367,6 +379,9 @@
       </if>
       <if test="inscriptionId != null">
         inscription_id = #{inscriptionId,jdbcType=VARCHAR},
+      </if>
+      <if test="tick != null">
+        tick = #{tick,jdbcType=VARCHAR},
       </if>
       <if test="hash != null">
         hash = #{hash,jdbcType=VARCHAR},
@@ -412,6 +427,7 @@
     set seq = #{seq,jdbcType=BIGINT},
       contract = #{contract,jdbcType=VARCHAR},
       inscription_id = #{inscriptionId,jdbcType=VARCHAR},
+      tick = #{tick,jdbcType=VARCHAR},
       hash = #{hash,jdbcType=VARCHAR},
       `from` = #{from,jdbcType=VARCHAR},
       from_type = #{fromType,jdbcType=INTEGER},
@@ -431,6 +447,7 @@
     set seq = #{seq,jdbcType=BIGINT},
       contract = #{contract,jdbcType=VARCHAR},
       inscription_id = #{inscriptionId,jdbcType=VARCHAR},
+      tick = #{tick,jdbcType=VARCHAR},
       hash = #{hash,jdbcType=VARCHAR},
       `from` = #{from,jdbcType=VARCHAR},
       from_type = #{fromType,jdbcType=INTEGER},
@@ -451,16 +468,16 @@
       @project https://github.com/itfsw/mybatis-generator-plugin
     -->
     insert into tx_inscription_bak
-    (id, seq, contract, inscription_id, hash, `from`, from_type, `to`, to_type, `value`, 
-      bn, b_time, tx_fee, num, `type`, remark)
+    (id, seq, contract, inscription_id, tick, hash, `from`, from_type, `to`, to_type, 
+      `value`, bn, b_time, tx_fee, num, `type`, remark)
     values
     <foreach collection="list" item="item" separator=",">
       (#{item.id,jdbcType=BIGINT}, #{item.seq,jdbcType=BIGINT}, #{item.contract,jdbcType=VARCHAR}, 
-        #{item.inscriptionId,jdbcType=VARCHAR}, #{item.hash,jdbcType=VARCHAR}, #{item.from,jdbcType=VARCHAR}, 
-        #{item.fromType,jdbcType=INTEGER}, #{item.to,jdbcType=VARCHAR}, #{item.toType,jdbcType=INTEGER}, 
-        #{item.value,jdbcType=VARCHAR}, #{item.bn,jdbcType=BIGINT}, #{item.bTime,jdbcType=TIMESTAMP}, 
-        #{item.txFee,jdbcType=VARCHAR}, #{item.num,jdbcType=BIGINT}, #{item.type,jdbcType=INTEGER}, 
-        #{item.remark,jdbcType=LONGVARCHAR})
+        #{item.inscriptionId,jdbcType=VARCHAR}, #{item.tick,jdbcType=VARCHAR}, #{item.hash,jdbcType=VARCHAR}, 
+        #{item.from,jdbcType=VARCHAR}, #{item.fromType,jdbcType=INTEGER}, #{item.to,jdbcType=VARCHAR}, 
+        #{item.toType,jdbcType=INTEGER}, #{item.value,jdbcType=VARCHAR}, #{item.bn,jdbcType=BIGINT}, 
+        #{item.bTime,jdbcType=TIMESTAMP}, #{item.txFee,jdbcType=VARCHAR}, #{item.num,jdbcType=BIGINT}, 
+        #{item.type,jdbcType=INTEGER}, #{item.remark,jdbcType=LONGVARCHAR})
     </foreach>
   </insert>
   <insert id="batchInsertSelective" parameterType="map">
@@ -489,6 +506,9 @@
         </if>
         <if test="'inscription_id'.toString() == column.value">
           #{item.inscriptionId,jdbcType=VARCHAR}
+        </if>
+        <if test="'tick'.toString() == column.value">
+          #{item.tick,jdbcType=VARCHAR}
         </if>
         <if test="'hash'.toString() == column.value">
           #{item.hash,jdbcType=VARCHAR}
