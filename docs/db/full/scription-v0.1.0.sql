@@ -810,13 +810,13 @@ CREATE TABLE `inscription` (
 
 DROP TABLE IF EXISTS `inscription_holder`;
 CREATE TABLE `inscription_holder` (
-                                      `inscription_id` varchar(128) NOT NULL COMMENT 'inscriptionId',
-                                      `address` varchar(64) NOT NULL COMMENT 'User address',
-                                      `balance` varchar(128) DEFAULT NULL COMMENT 'Address token balance, job update',
+                                      `inscription_id` varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'inscriptionId',
+                                      `address` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'User address',
+                                      `balance` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Address token balance, job update',
                                       `mint_times` int DEFAULT '0' COMMENT 'Number of mint times, agent update',
                                       `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Creation time',
                                       `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'update time',
-                                      PRIMARY KEY (`inscription_id`) USING BTREE,
+                                      PRIMARY KEY (`inscription_id`,`address`) USING BTREE,
                                       UNIQUE KEY `uk_inscriptionId_address` (`inscription_id`,`address`)
 ) COMMENT='inscription holder table';
 
