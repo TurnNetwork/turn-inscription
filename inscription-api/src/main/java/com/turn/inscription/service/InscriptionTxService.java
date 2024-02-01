@@ -118,6 +118,13 @@ public class InscriptionTxService {
         if (StringUtils.isNotEmpty(req.getAddress())) {
             count.buildMust(new BoolQueryBuilder().should(QueryBuilders.termQuery("from", req.getAddress())).should(QueryBuilders.termQuery("to", req.getAddress())));
         }
+        if (StrUtil.isNotBlank(req.getInscriptionId())) {
+            // Compatible with old data
+            count.buildMust(new BoolQueryBuilder().should(QueryBuilders.termQuery("inscriptionId", req.getInscriptionId())));
+        }
+        if (ObjectUtil.isNotNull(req.getType())) {
+            count.must(new ESQueryBuilders().term("type", req.getType()));
+        }
 
         try {
             queryResultFromES = esInscriptionTxRepository.search(constructor, TxInscriptionBak.class, req.getPageNo(), req.getPageSize());

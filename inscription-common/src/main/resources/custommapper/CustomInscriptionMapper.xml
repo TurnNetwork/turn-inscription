@@ -89,6 +89,9 @@
   <update id="updateHolders">
     update inscription set holders = #{holdCount} where contract_address = #{contractAddress}
   </update>
+  <update id="updateStatus">
+    update inscription set `status` = 2 where id = #{id}
+  </update>
   <select id="selectListByExample" parameterType="com.turn.inscription.dao.entity.InscriptionExample" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />

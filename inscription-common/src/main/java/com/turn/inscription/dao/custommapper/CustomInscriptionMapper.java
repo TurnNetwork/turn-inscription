@@ -6,7 +6,6 @@ import com.turn.inscription.dao.entity.Inscription;
 import com.turn.inscription.dao.entity.InscriptionExample;
 import org.apache.ibatis.annotations.Param;
 
-import java.util.List;
 
 public interface CustomInscriptionMapper {
 
@@ -17,4 +16,6 @@ public interface CustomInscriptionMapper {
     void updateMinted(@Param("contractAddress") String contractAddress, @Param("limitPerMint")Long limitPerMint);
 
     void updateHolders(@Param("holdCount") Integer holdCount, @Param("contractAddress") String contractAddress);
+
+    void updateStatus(Integer id);
 }

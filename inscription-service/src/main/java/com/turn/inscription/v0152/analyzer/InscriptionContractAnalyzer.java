@@ -137,11 +137,19 @@ public class InscriptionContractAnalyzer {
                     }
                 });
             });
+            handleInscriptionStatus(inscription);
             log.info("The current inscription transaction [{}] has [{}] events",
                     tx.getHash(),
                     CommonUtil.ofNullable(() -> tx.getInscriptionContractEventInfo().size()).orElse(0));
         } catch (Exception e) {
-            log.error(StrUtil.format("Exception in parsing Game transaction of current transaction [{}]", tx.getHash()), e);
+            log.error(StrUtil.format("Exception in parsing inscription transaction of current transaction [{}]", tx.getHash()), e);
+        }
+    }
+
+    private void handleInscriptionStatus(Inscription inscription) {
+        Inscription inscriptionTemp = inscriptionMapper.selectByPrimaryKey(inscription.getId());
+        if(inscriptionTemp.getTotalSupply().equals(inscriptionTemp.getLimitPerMint()*inscriptionTemp.getHolders())){
+            customInscriptionMapper.updateStatus(inscription.getId());
         }
     }
 
@@ -220,10 +228,7 @@ public class InscriptionContractAnalyzer {
     @Transactional(rollbackFor = {Exception.class, Error.class})
     public void handleInscriptionHolder(List<TxInscriptionBak> txList, Inscription inscription) {
         List<InscriptionHolder> insertOrUpdate = new ArrayList<>();
-        txList.forEach(tx -> {
-            resolveTokenHolder(tx.getFrom(), tx, insertOrUpdate,inscription);
-            resolveTokenHolder(tx.getTo(), tx, insertOrUpdate,inscription);
-        });
+        txList.forEach(tx -> resolveInscriptionHolder(tx.getTo(), tx, insertOrUpdate,inscription));
         if (CollUtil.isNotEmpty(insertOrUpdate)) {
             customInscriptionHolderMapper.batchInsertOrUpdateSelective(insertOrUpdate,
                     InscriptionHolder.Column.excludes(InscriptionHolder.Column.createTime,
@@ -231,7 +236,7 @@ public class InscriptionContractAnalyzer {
         }
     }
 
-    private void resolveTokenHolder(String ownerAddress, TxInscriptionBak txInscriptionBak, List<InscriptionHolder> insertOrUpdate, Inscription inscription) {
+    private void resolveInscriptionHolder(String ownerAddress, TxInscriptionBak txInscriptionBak, List<InscriptionHolder> insertOrUpdate, Inscription inscription) {
 
         InscriptionHolderKey key = getInscriptionHolderKey(ownerAddress, txInscriptionBak);
         InscriptionHolder inscriptionHolder = customInscriptionHolderMapper.selectByKey(key);
