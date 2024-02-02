@@ -3,6 +3,7 @@
 <mapper namespace="com.turn.inscription.dao.mapper.InscriptionHolderMapper">
   <resultMap id="BaseResultMap" type="com.turn.inscription.dao.entity.InscriptionHolder">
     <id column="inscription_id" jdbcType="VARCHAR" property="inscriptionId" />
+    <result column="tick" jdbcType="VARCHAR" property="tick" />
     <result column="address" jdbcType="VARCHAR" property="address" />
     <result column="balance" jdbcType="VARCHAR" property="balance" />
     <result column="mint_times" jdbcType="INTEGER" property="mintTimes" />
@@ -68,7 +69,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    inscription_id, address, balance, mint_times, create_time, update_time
+    inscription_id, tick, address, balance, mint_times, create_time, update_time
   </sql>
   <select id="selectByExample" parameterType="com.turn.inscription.dao.entity.InscriptionHolderExample" resultMap="BaseResultMap">
     select
@@ -101,18 +102,21 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.turn.inscription.dao.entity.InscriptionHolder">
-    insert into inscription_holder (inscription_id, address, balance, 
-      mint_times, create_time, update_time
-      )
-    values (#{inscriptionId,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{balance,jdbcType=VARCHAR}, 
-      #{mintTimes,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
-      )
+    insert into inscription_holder (inscription_id, tick, address, 
+      balance, mint_times, create_time, 
+      update_time)
+    values (#{inscriptionId,jdbcType=VARCHAR}, #{tick,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, 
+      #{balance,jdbcType=VARCHAR}, #{mintTimes,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.turn.inscription.dao.entity.InscriptionHolder">
     insert into inscription_holder
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="inscriptionId != null">
         inscription_id,
+      </if>
+      <if test="tick != null">
+        tick,
       </if>
       <if test="address != null">
         address,
@@ -133,6 +137,9 @@
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="inscriptionId != null">
         #{inscriptionId,jdbcType=VARCHAR},
+      </if>
+      <if test="tick != null">
+        #{tick,jdbcType=VARCHAR},
       </if>
       <if test="address != null">
         #{address,jdbcType=VARCHAR},
@@ -163,6 +170,9 @@
       <if test="record.inscriptionId != null">
         inscription_id = #{record.inscriptionId,jdbcType=VARCHAR},
       </if>
+      <if test="record.tick != null">
+        tick = #{record.tick,jdbcType=VARCHAR},
+      </if>
       <if test="record.address != null">
         address = #{record.address,jdbcType=VARCHAR},
       </if>
@@ -186,6 +196,7 @@
   <update id="updateByExample" parameterType="map">
     update inscription_holder
     set inscription_id = #{record.inscriptionId,jdbcType=VARCHAR},
+      tick = #{record.tick,jdbcType=VARCHAR},
       address = #{record.address,jdbcType=VARCHAR},
       balance = #{record.balance,jdbcType=VARCHAR},
       mint_times = #{record.mintTimes,jdbcType=INTEGER},
@@ -198,6 +209,9 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.turn.inscription.dao.entity.InscriptionHolder">
     update inscription_holder
     <set>
+      <if test="tick != null">
+        tick = #{tick,jdbcType=VARCHAR},
+      </if>
       <if test="address != null">
         address = #{address,jdbcType=VARCHAR},
       </if>
@@ -218,7 +232,8 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="com.turn.inscription.dao.entity.InscriptionHolder">
     update inscription_holder
-    set address = #{address,jdbcType=VARCHAR},
+    set tick = #{tick,jdbcType=VARCHAR},
+      address = #{address,jdbcType=VARCHAR},
       balance = #{balance,jdbcType=VARCHAR},
       mint_times = #{mintTimes,jdbcType=INTEGER},
       create_time = #{createTime,jdbcType=TIMESTAMP},
@@ -232,12 +247,12 @@
       @project https://github.com/itfsw/mybatis-generator-plugin
     -->
     insert into inscription_holder
-    (inscription_id, address, balance, mint_times, create_time, update_time)
+    (inscription_id, tick, address, balance, mint_times, create_time, update_time)
     values
     <foreach collection="list" item="item" separator=",">
-      (#{item.inscriptionId,jdbcType=VARCHAR}, #{item.address,jdbcType=VARCHAR}, #{item.balance,jdbcType=VARCHAR}, 
-        #{item.mintTimes,jdbcType=INTEGER}, #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateTime,jdbcType=TIMESTAMP}
-        )
+      (#{item.inscriptionId,jdbcType=VARCHAR}, #{item.tick,jdbcType=VARCHAR}, #{item.address,jdbcType=VARCHAR}, 
+        #{item.balance,jdbcType=VARCHAR}, #{item.mintTimes,jdbcType=INTEGER}, #{item.createTime,jdbcType=TIMESTAMP}, 
+        #{item.updateTime,jdbcType=TIMESTAMP})
     </foreach>
   </insert>
   <insert id="batchInsertSelective" parameterType="map">
@@ -257,6 +272,9 @@
       <foreach collection="selective" item="column" separator=",">
         <if test="'inscription_id'.toString() == column.value">
           #{item.inscriptionId,jdbcType=VARCHAR}
+        </if>
+        <if test="'tick'.toString() == column.value">
+          #{item.tick,jdbcType=VARCHAR}
         </if>
         <if test="'address'.toString() == column.value">
           #{item.address,jdbcType=VARCHAR}

@@ -7,6 +7,8 @@ import java.util.Date;
 public class InscriptionHolder {
     private String inscriptionId;
 
+    private String tick;
+
     private String address;
 
     private String balance;
@@ -23,6 +25,14 @@ public class InscriptionHolder {
 
     public void setInscriptionId(String inscriptionId) {
         this.inscriptionId = inscriptionId == null ? null : inscriptionId.trim();
+    }
+
+    public String getTick() {
+        return tick;
+    }
+
+    public void setTick(String tick) {
+        this.tick = tick == null ? null : tick.trim();
     }
 
     public String getAddress() {
@@ -74,6 +84,7 @@ public class InscriptionHolder {
      */
     public enum Column {
         inscriptionId("inscription_id", "inscriptionId", "VARCHAR", false),
+        tick("tick", "tick", "VARCHAR", false),
         address("address", "address", "VARCHAR", false),
         balance("balance", "balance", "VARCHAR", false),
         mintTimes("mint_times", "mintTimes", "INTEGER", false),
