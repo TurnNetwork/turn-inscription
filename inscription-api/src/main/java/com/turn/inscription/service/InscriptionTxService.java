@@ -156,6 +156,7 @@ public class InscriptionTxService {
                                                                                 .systemTimestamp(System.currentTimeMillis())
                                                                                 .num(record.getNum())
                                                                                 .type(record.getType())
+                                                                                .tick(record.getTick())
                                                                                 .build();
         // Processing accuracy calculation.
         if (null == record.getValue()) {

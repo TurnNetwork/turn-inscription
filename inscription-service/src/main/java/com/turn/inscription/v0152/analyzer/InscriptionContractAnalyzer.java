@@ -146,10 +146,10 @@ public class InscriptionContractAnalyzer {
         }
     }
 
-    private void handleInscriptionStatus(Inscription inscription) {
-        Inscription inscriptionTemp = inscriptionMapper.selectByPrimaryKey(inscription.getId());
-        if(inscriptionTemp.getTotalSupply().equals(inscriptionTemp.getLimitPerMint()*inscriptionTemp.getHolders())){
-            customInscriptionMapper.updateStatus(inscription.getId());
+    public void handleInscriptionStatus(Inscription inscription) {
+        Inscription inscriptionTemp = customInscriptionMapper.selectByInscriptionId(inscription.getInscriptionId());
+        if(inscriptionTemp.getTotalSupply().equals(inscriptionTemp.getMinted())){
+            customInscriptionMapper.updateStatus(inscriptionTemp.getId());
         }
     }
 

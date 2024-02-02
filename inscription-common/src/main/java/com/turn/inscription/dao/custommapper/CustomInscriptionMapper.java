@@ -17,5 +17,5 @@ public interface CustomInscriptionMapper {
 
     void updateHolders(@Param("holdCount") Integer holdCount, @Param("contractAddress") String contractAddress);
 
-    void updateStatus(Integer id);
+    void updateStatus(@Param("id") Integer id);
 }
