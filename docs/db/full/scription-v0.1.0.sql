@@ -811,6 +811,7 @@ CREATE TABLE `inscription` (
 DROP TABLE IF EXISTS `inscription_holder`;
 CREATE TABLE `inscription_holder` (
                                       `inscription_id` varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'inscriptionId',
+                                      `tick` varchar(100) DEFAULT NULL COMMENT 'inscription tick',
                                       `address` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'User address',
                                       `balance` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Address token balance, job update',
                                       `mint_times` int DEFAULT '0' COMMENT 'Number of mint times, agent update',

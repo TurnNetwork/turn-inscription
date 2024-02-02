@@ -247,9 +247,11 @@ public class InscriptionContractAnalyzer {
             inscriptionHolder.setAddress(key.getAddress());
             inscriptionHolder.setBalance(inscription.getLimitPerMint().toString());
             inscriptionHolder.setMintTimes(1);
+            inscriptionHolder.setTick(inscription.getTick());
         } else {
             inscriptionHolder.setBalance(String.valueOf(Long.parseLong(inscriptionHolder.getBalance()) + inscription.getLimitPerMint()));
             inscriptionHolder.setMintTimes(inscriptionHolder.getMintTimes()+1);
+            inscriptionHolder.setTick(inscription.getTick());
         }
         log.info("The inscription contract address [{}], the holder's address [{}], and the holder's balance of transactions for this inscription contract is [{}]",
                 inscriptionHolder.getInscriptionId(),

@@ -3,6 +3,7 @@
 <mapper namespace="com.turn.inscription.dao.custommapper.CustomInscriptionHolderMapper">
     <resultMap id="BaseResultMap" type="com.turn.inscription.dao.entity.InscriptionHolder">
         <id column="inscription_id" jdbcType="VARCHAR" property="inscriptionId" />
+        <result column="tick" jdbcType="VARCHAR" property="tick" />
         <result column="address" jdbcType="VARCHAR" property="address" />
         <result column="balance" jdbcType="VARCHAR" property="balance" />
         <result column="mint_times" jdbcType="INTEGER" property="mintTimes" />
@@ -68,7 +69,7 @@
         </where>
     </sql>
     <sql id="Base_Column_List">
-        inscription_id, address, balance, mint_times, create_time, update_time
+        inscription_id, tick, address, balance, mint_times, create_time, update_time
     </sql>
     <insert id="batchInsertOrUpdateSelective" parameterType="map">
         replace into inscription_holder (
@@ -82,6 +83,9 @@
             <foreach collection="selective" item="column" separator=",">
                 <if test="'inscription_id'.toString() == column.value">
                     #{item.inscriptionId,jdbcType=VARCHAR}
+                </if>
+                <if test="'tick'.toString() == column.value">
+                    #{item.tick,jdbcType=VARCHAR}
                 </if>
                 <if test="'address'.toString() == column.value">
                     #{item.address,jdbcType=VARCHAR}

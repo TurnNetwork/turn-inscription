@@ -175,6 +175,76 @@ public class InscriptionHolderExample {
             return (Criteria) this;
         }
 
+        public Criteria andTickIsNull() {
+            addCriterion("tick is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTickIsNotNull() {
+            addCriterion("tick is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTickEqualTo(String value) {
+            addCriterion("tick =", value, "tick");
+            return (Criteria) this;
+        }
+
+        public Criteria andTickNotEqualTo(String value) {
+            addCriterion("tick <>", value, "tick");
+            return (Criteria) this;
+        }
+
+        public Criteria andTickGreaterThan(String value) {
+            addCriterion("tick >", value, "tick");
+            return (Criteria) this;
+        }
+
+        public Criteria andTickGreaterThanOrEqualTo(String value) {
+            addCriterion("tick >=", value, "tick");
+            return (Criteria) this;
+        }
+
+        public Criteria andTickLessThan(String value) {
+            addCriterion("tick <", value, "tick");
+            return (Criteria) this;
+        }
+
+        public Criteria andTickLessThanOrEqualTo(String value) {
+            addCriterion("tick <=", value, "tick");
+            return (Criteria) this;
+        }
+
+        public Criteria andTickLike(String value) {
+            addCriterion("tick like", value, "tick");
+            return (Criteria) this;
+        }
+
+        public Criteria andTickNotLike(String value) {
+            addCriterion("tick not like", value, "tick");
+            return (Criteria) this;
+        }
+
+        public Criteria andTickIn(List<String> values) {
+            addCriterion("tick in", values, "tick");
+            return (Criteria) this;
+        }
+
+        public Criteria andTickNotIn(List<String> values) {
+            addCriterion("tick not in", values, "tick");
+            return (Criteria) this;
+        }
+
+        public Criteria andTickBetween(String value1, String value2) {
+            addCriterion("tick between", value1, value2, "tick");
+            return (Criteria) this;
+        }
+
+        public Criteria andTickNotBetween(String value1, String value2) {
+            addCriterion("tick not between", value1, value2, "tick");
+            return (Criteria) this;
+        }
+
         public Criteria andAddressIsNull() {
             addCriterion("address is null");
             return (Criteria) this;

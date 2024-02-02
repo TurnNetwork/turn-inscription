@@ -5,8 +5,18 @@ import java.math.BigDecimal;
 public class InscriptionHolderResp {
 
     private Integer mintTimes;
+
+    private String tick;
     private String inscriptionId;
     private BigDecimal balance;
+
+    public String getTick() {
+        return tick;
+    }
+
+    public void setTick(String tick) {
+        this.tick = tick;
+    }
 
     public Integer getMintTimes() {
         return mintTimes;
