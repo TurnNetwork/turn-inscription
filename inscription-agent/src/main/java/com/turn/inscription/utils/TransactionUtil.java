@@ -98,10 +98,10 @@ public class TransactionUtil {
             tx.setSeq((long) i);
             transactionList.add(tx);
 
-            if (Integer.parseInt(tran.getCode()) > 0) {
-                // The virtual transaction failed and the transaction status code was set to failed.
-                tx.setStatus(Transaction.StatusEnum.FAILURE.getCode());
-            }
+//            if (Integer.parseInt(tran.getCode()) > 0) {
+//                // The virtual transaction failed and the transaction status code was set to failed.
+//                tx.setStatus(Transaction.StatusEnum.FAILURE.getCode());
+//            }
         }
         return transactionList;
     }

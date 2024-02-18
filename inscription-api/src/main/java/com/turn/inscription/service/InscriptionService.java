@@ -52,7 +52,7 @@ public class InscriptionService {
         List<InscriptionListResp> lists = new LinkedList<>();
         /** Query list based on conditions and status */
         InscriptionExample inscriptionExample = new InscriptionExample();
-        inscriptionExample.setOrderByClause(" create_time desc");
+        inscriptionExample.setOrderByClause(" create_time asc");
         InscriptionExample.Criteria criteria1 = inscriptionExample.createCriteria();
         if(!InscriptionStatusEnum.ALL.getCode().equals(status)){
             criteria1.andStatusEqualTo(status);
@@ -99,11 +99,7 @@ public class InscriptionService {
         List<InscriptionHolderListResp> lists = new LinkedList<>();
         /** Query list based on conditions and status */
         InscriptionHolderExample inscriptionHolderExample = new InscriptionHolderExample();
-        if(ObjectUtil.isNotNull(req.getSort())){
-            inscriptionHolderExample.setOrderByClause(" balance asc");
-        }else {
-            inscriptionHolderExample.setOrderByClause(" balance desc");
-        }
+        inscriptionHolderExample.setOrderByClause(" balance desc");
         InscriptionHolderExample.Criteria criteria = inscriptionHolderExample.createCriteria();
 
         criteria.andInscriptionIdEqualTo(req.getInscriptionId());
@@ -134,16 +130,22 @@ public class InscriptionService {
         /** Query list based on conditions and status */
         InscriptionInventoryExample inscriptionInventoryExample = new InscriptionInventoryExample();
         inscriptionInventoryExample.setOrderByClause(" create_time desc");
-        InscriptionInventoryExample.Criteria criteria = inscriptionInventoryExample.createCriteria();
 
-        criteria.andOwnerEqualTo(req.getAddress());
-        criteria.andInscriptionIdEqualTo(req.getInscriptionId());
+        if(StrUtil.isEmpty(req.getKey())){
+            InscriptionInventoryExample.Criteria criteria = inscriptionInventoryExample.createCriteria();
+            criteria.andOwnerEqualTo(req.getAddress());
+            criteria.andInscriptionIdEqualTo(req.getInscriptionId());
+        }else {
+            InscriptionInventoryExample.Criteria criteria = inscriptionInventoryExample.createCriteria();
+            criteria.andOwnerEqualTo(req.getAddress());
+            criteria.andInscriptionIdEqualTo(req.getInscriptionId());
+            criteria.andExtEqualTo(req.getKey());
 
-        if(StrUtil.isNotEmpty(req.getKey())){
-            criteria.andExtLike("%" + req.getKey() + "%");
-            inscriptionInventoryExample.or(criteria);
             InscriptionInventoryExample.Criteria criteria1 = inscriptionInventoryExample.createCriteria();
-            criteria1.andNumEqualTo("%" + req.getKey() + "%");
+            criteria1.andOwnerEqualTo(req.getAddress());
+            criteria1.andInscriptionIdEqualTo(req.getInscriptionId());
+            criteria1.andNumEqualTo(req.getKey());
+            inscriptionInventoryExample.or(criteria1);
         }
         Page<InscriptionInventory> inscriptionInventoryPage = customInscriptionInventoryMapper.selectListByExample(inscriptionInventoryExample);
         List<InscriptionInventory> inscriptionInventoryList = inscriptionInventoryPage.getResult();
